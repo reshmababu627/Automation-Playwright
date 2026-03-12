@@ -111,7 +111,7 @@ class WorkShiftsPage:
             self.page.locator(row_xpath).locator(".oxd-checkbox-wrapper span").click()
             self.page.wait_for_timeout(500)
             
-        # Click Delete Selected
+        # Click Delete 
         self.page.click(self.delete_selected_button)
         
         self.page.wait_for_timeout(2000)

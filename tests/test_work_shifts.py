@@ -20,7 +20,7 @@ class TestWorkShifts:
         TestWorkShifts.shift_name = self.generate_random_name()
         print(f"Testing Add Work Shift: {TestWorkShifts.shift_name}")
         
-        # Add Work Shift
+     
         self.work_shifts_page.add_work_shift(TestWorkShifts.shift_name)
         
         # Verify
