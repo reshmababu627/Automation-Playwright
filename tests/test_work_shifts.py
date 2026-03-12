@@ -126,29 +126,38 @@ class TestWorkShifts:
         self.work_shifts_page.page.wait_for_url("**/workShift")
 
     def test_add_duplicate_work_shift(self, authenticated_page: Page):
-        authenticated_page.wait_for_timeout(2000)
+
+        page = authenticated_page
+
         assert TestWorkShifts.shift_name is not None, "Setup failed: No existing shift to duplicate!"
+
+    # Wait until page fully loads
         page.wait_for_load_state("networkidle")
-        # Click Add
-        self.work_shifts_page.page.click(self.work_shifts_page.add_button)
-        self.work_shifts_page.page.wait_for_url("**/saveWorkShift*", timeout=60000)
-        
-        # Fill existing name
-        self.work_shifts_page.page.fill(self.work_shifts_page.name_input, TestWorkShifts.shift_name)
-        
-        # Blur
-        self.work_shifts_page.page.click("//h6")
-        self.work_shifts_page.page.wait_for_timeout(500)
-        
-        # Click Save
-        self.work_shifts_page.page.click(self.work_shifts_page.save_button)
-        
-        # Verify already exists error
-        assert self.work_shifts_page.is_already_exists_error_visible(), f"Already exists error not visible for duplicate shift name '{TestWorkShifts.shift_name}'!"
-        
-        # Cleanup
-        self.work_shifts_page.page.click(self.work_shifts_page.cancel_button)
-        self.work_shifts_page.page.wait_for_url("**/workShift")
+
+    # Wait for Add button before clicking
+        add_btn = page.locator(self.work_shifts_page.add_button)
+        add_btn.wait_for(state="visible", timeout=60000)
+        add_btn.click()
+
+    # Wait for navigation
+        page.wait_for_url("**/saveWorkShift*", timeout=60000)
+
+    # Fill existing name
+        page.fill(self.work_shifts_page.name_input, TestWorkShifts.shift_name)
+
+    # Blur field
+        page.click("//h6")
+
+    # Click Save
+        page.locator(self.work_shifts_page.save_button).click()
+
+    # Verify duplicate error
+        assert self.work_shifts_page.is_already_exists_error_visible(), \
+        f"Already exists error not visible for duplicate shift name '{TestWorkShifts.shift_name}'!"
+
+    # Cleanup
+        page.locator(self.work_shifts_page.cancel_button).click()
+        page.wait_for_url("**/workShift")
 
     def test_edit_work_shift(self, authenticated_page: Page):
         authenticated_page.wait_for_timeout(2000)
