@@ -1,0 +1,1 @@
+Password error text: 'Should have at least 7 characters'
