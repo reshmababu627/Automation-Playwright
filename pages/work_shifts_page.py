@@ -36,8 +36,8 @@ class WorkShiftsPage:
             self.page.wait_for_url("**/workShift")
         
         # Ensure the page header and Add button are visible
-        self.page.wait_for_selector(self.page_header, state="visible")
-        self.page.wait_for_selector(self.add_button, state="visible", timeout=10000)
+        self.page.wait_for_selector(self.page_header, state="visible", timeout=20000)
+        self.page.wait_for_selector(self.add_button, state="visible", timeout=20000)
 
     def add_work_shift(self, name, from_time="09:00 AM", to_time="05:00 PM", employees=None):
         # Wait for add button stability
@@ -68,10 +68,11 @@ class WorkShiftsPage:
             self.page.click(f"div[role='option'] span:has-text('{employees}')")
         self.page.wait_for_timeout(500)
         
-        self.page.wait_for_selector(self.save_button, state="visible")
+        self.page.wait_for_selector(self.save_button, state="visible", timeout=10000)
         self.page.click(self.save_button)
+        # Increase timeout for Jenkins
         self.page.wait_for_url("**/workShift", timeout=60000)
-        self.page.wait_for_load_state("networkidle")
+        self.page.wait_for_load_state("networkidle", timeout=60000)
 
     def is_work_shift_present(self, name):
         self.page.wait_for_selector("div.oxd-table-body")
