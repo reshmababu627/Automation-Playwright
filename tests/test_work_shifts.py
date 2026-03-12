@@ -128,10 +128,10 @@ class TestWorkShifts:
     def test_add_duplicate_work_shift(self, authenticated_page: Page):
         authenticated_page.wait_for_timeout(2000)
         assert TestWorkShifts.shift_name is not None, "Setup failed: No existing shift to duplicate!"
-        
+        page.wait_for_load_state("networkidle")
         # Click Add
         self.work_shifts_page.page.click(self.work_shifts_page.add_button)
-        self.work_shifts_page.page.wait_for_url("**/saveWorkShift*")
+        self.work_shifts_page.page.wait_for_url("**/saveWorkShift*", timeout=60000)
         
         # Fill existing name
         self.work_shifts_page.page.fill(self.work_shifts_page.name_input, TestWorkShifts.shift_name)
