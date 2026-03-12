@@ -28,12 +28,15 @@ class WorkShiftsPage:
         self.error_message = "//span[contains(@class,'oxd-input-group__message')]"
 
     def navigate_to_work_shifts(self):
-        self.page.click(self.admin_menu)
-        self.page.click(self.job_menu)
-        self.page.click(self.work_shifts_menu)
-        self.page.wait_for_url("**/workShift")
-        self.page.wait_for_selector(self.page_header)
-        # Ensure the Add button is visible before proceeding
+        # Only navigate if not already on the Work Shifts page
+        if "/workShift" not in self.page.url:
+            self.page.click(self.admin_menu)
+            self.page.click(self.job_menu)
+            self.page.click(self.work_shifts_menu)
+            self.page.wait_for_url("**/workShift")
+        
+        # Ensure the page header and Add button are visible
+        self.page.wait_for_selector(self.page_header, state="visible")
         self.page.wait_for_selector(self.add_button, state="visible", timeout=10000)
 
     def add_work_shift(self, name, from_time="09:00 AM", to_time="05:00 PM", employees=None):
@@ -65,8 +68,9 @@ class WorkShiftsPage:
             self.page.click(f"div[role='option'] span:has-text('{employees}')")
         self.page.wait_for_timeout(500)
         
+        self.page.wait_for_selector(self.save_button, state="visible")
         self.page.click(self.save_button)
-        self.page.wait_for_url("**/workShift")
+        self.page.wait_for_url("**/workShift", timeout=60000)
         self.page.wait_for_load_state("networkidle")
 
     def is_work_shift_present(self, name):
