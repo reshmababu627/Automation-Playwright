@@ -27,7 +27,6 @@ class TestWorkShifts:
         assert self.work_shifts_page.is_work_shift_present(TestWorkShifts.shift_name), f"Work Shift {TestWorkShifts.shift_name} not found after adding!"
 
     def test_add_work_shift_with_employee(self, authenticated_page: Page):
-        #self.work_shifts_page.navigate_to_work_shifts()
         authenticated_page.wait_for_timeout(2000)
         TestWorkShifts.shift_name = self.generate_random_name()
         
@@ -57,10 +56,10 @@ class TestWorkShifts:
         self.work_shifts_page.page.wait_for_url("**/workShift")
 
     def test_add_work_shift_without_time(self, authenticated_page: Page):
-        #self.work_shifts_page.navigate_to_work_shifts()
         authenticated_page.wait_for_timeout(2000)
         
         # Click Add
+        
         self.work_shifts_page.page.click(self.work_shifts_page.add_button)
         self.work_shifts_page.page.wait_for_url("**/saveWorkShift*")
         
@@ -91,7 +90,6 @@ class TestWorkShifts:
         self.work_shifts_page.page.wait_for_url("**/workShift")
 
     def test_add_work_shift_invalid_time_range(self, authenticated_page: Page):
-        #self.work_shifts_page.navigate_to_work_shifts()
         authenticated_page.wait_for_timeout(2000)
         
         # Click Add

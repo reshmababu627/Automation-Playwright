@@ -33,8 +33,12 @@ class WorkShiftsPage:
         self.page.click(self.work_shifts_menu)
         self.page.wait_for_url("**/workShift")
         self.page.wait_for_selector(self.page_header)
+        # Ensure the Add button is visible before proceeding
+        self.page.wait_for_selector(self.add_button, state="visible", timeout=10000)
 
     def add_work_shift(self, name, from_time="09:00 AM", to_time="05:00 PM", employees=None):
+        # Wait for add button stability
+        self.page.wait_for_selector(self.add_button, state="visible")
         self.page.click(self.add_button)
         self.page.wait_for_url("**/saveWorkShift*")
         
