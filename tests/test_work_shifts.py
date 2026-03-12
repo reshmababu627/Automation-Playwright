@@ -75,7 +75,7 @@ class TestWorkShifts:
         
         # Blur
         self.work_shifts_page.page.click("//h6")
-        self.work_shifts_page.page.wait_for_timeout(500)
+       # self.work_shifts_page.page.wait_for_timeout(500)
         
         # Click Save
         self.work_shifts_page.page.click(self.work_shifts_page.save_button)
@@ -113,7 +113,7 @@ class TestWorkShifts:
         
         # Blur
         self.work_shifts_page.page.click("//h6")
-        self.work_shifts_page.page.wait_for_timeout(500)
+       # self.work_shifts_page.page.wait_for_timeout(500)
         
         # Click Save
         self.work_shifts_page.page.click(self.work_shifts_page.save_button)
@@ -195,7 +195,7 @@ class TestWorkShifts:
         self.work_shifts_page.page.wait_for_url("**/saveWorkShift*")
         self.work_shifts_page.page.fill(self.work_shifts_page.name_input, shift1)
         self.work_shifts_page.page.click("//h6")
-        self.work_shifts_page.page.wait_for_timeout(500)
+        #self.work_shifts_page.page.wait_for_timeout(500)
         self.work_shifts_page.page.click(self.work_shifts_page.save_button)
         self.work_shifts_page.page.wait_for_url("**/workShift")
         self.work_shifts_page.page.wait_for_load_state("networkidle")
@@ -205,7 +205,7 @@ class TestWorkShifts:
         self.work_shifts_page.page.wait_for_url("**/saveWorkShift*")
         self.work_shifts_page.page.fill(self.work_shifts_page.name_input, shift2)
         self.work_shifts_page.page.click("//h6")
-        self.work_shifts_page.page.wait_for_timeout(500)
+        #self.work_shifts_page.page.wait_for_timeout(500)
         self.work_shifts_page.page.click(self.work_shifts_page.save_button)
         self.work_shifts_page.page.wait_for_url("**/workShift")
         self.work_shifts_page.page.wait_for_load_state("networkidle")
