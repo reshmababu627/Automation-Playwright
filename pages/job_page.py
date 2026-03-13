@@ -45,11 +45,9 @@ class JobPage:
     def add_job(self, title: str, description: str = ""):
         self.page.click(self.add_button)
         self.page.wait_for_url("**/saveJobTitle")
-    
         self.page.fill(self.job_title_input, title)
 
         if description:
-
             self.page.fill(self.job_description_input, description)
 
         self.page.click(self.save_button)
@@ -124,10 +122,9 @@ class JobPage:
         self.page.click(self.cancel_button)
         self.page.wait_for_url("**/viewJobTitleList")
 
-    def is_required_error_visible(self, field_name):
-        locator = f"//label[text()='{field_name}']/ancestor::div[contains(@class, 'oxd-input-group')]//span[contains(@class,'oxd-input-group__message') and text()='Required']"
+    def is_required_error_visible(self):
         try:
-            self.page.wait_for_selector(locator, timeout=5000)
+            self.page.wait_for_selector(f"{self.error_message}[text()='Required']", timeout=5000)
             return True
         except:
             return False
