@@ -12,12 +12,14 @@ class TestUserManagement:
     def setup(self, authenticated_page: Page):
         self.login_page = LoginPage(authenticated_page)
         self.user_mgt_page = UserManagementPage(authenticated_page)
+        # Always ensure we start from the Users list page
+        self.user_mgt_page.navigate_to_users()
 
     def generate_random_username(self):
         return f"TestUser_{random.randint(10000, 99999)}"
 
     def test_add_user(self, authenticated_page: Page):
-        self.user_mgt_page.navigate_to_users()
+        """Verify that a new user can be successfully added with valid information."""
         TestUserManagement.username_to_test = self.generate_random_username()
         print(f"Testing Add User: {TestUserManagement.username_to_test}")
         
@@ -34,6 +36,7 @@ class TestUserManagement:
         assert self.user_mgt_page.is_user_present(TestUserManagement.username_to_test), f"User {TestUserManagement.username_to_test} not found after adding!"
 
     def test_add_user_empty(self, authenticated_page: Page):
+        """Verify that mandatory field 'Required' errors are displayed when attempting to save an empty user form."""
         # self.user_mgt_page.navigate_to_users() # Uncomment if running isolated
         authenticated_page.wait_for_timeout(2000)
         
@@ -56,6 +59,7 @@ class TestUserManagement:
         self.user_mgt_page.page.wait_for_url("**/viewSystemUsers")
 
     def test_add_user_duplicate(self, authenticated_page: Page):
+        """Verify that an error message is displayed when attempting to add a user with an existing username."""
         authenticated_page.wait_for_timeout(2000)
         assert TestUserManagement.username_to_test is not None, "Setup failed: No existing user to duplicate!"
         
@@ -92,6 +96,7 @@ class TestUserManagement:
         self.user_mgt_page.page.wait_for_url("**/viewSystemUsers")
 
     def test_add_user_password_mismatch(self, authenticated_page: Page):
+        """Verify that an error message is displayed when the 'Password' and 'Confirm Password' fields do not match."""
         authenticated_page.wait_for_timeout(2000)
         
         # Click Add
@@ -130,6 +135,7 @@ class TestUserManagement:
         self.user_mgt_page.page.wait_for_url("**/viewSystemUsers")
 
     def test_add_user_password_policy(self, authenticated_page: Page):
+        """Verify that the password policy (minimum length) is enforced when adding a user."""
         authenticated_page.wait_for_timeout(2000)
         
         # Click Add
@@ -168,6 +174,7 @@ class TestUserManagement:
         self.user_mgt_page.page.wait_for_url("**/viewSystemUsers")
 
     def test_edit_user(self, authenticated_page: Page):
+        """Verify that an existing user's role can be successfully updated."""
         authenticated_page.wait_for_timeout(2000)
         assert TestUserManagement.username_to_test is not None, "Setup failed: No user to edit!"
         
@@ -184,6 +191,7 @@ class TestUserManagement:
         assert self.user_mgt_page.is_user_present(current_username), f"User {current_username} not found after edit!"
 
     def test_disable_user(self, authenticated_page: Page):
+        """Verify that a user's status can be changed to 'Disabled'."""
         authenticated_page.wait_for_timeout(2000)
         
         # Ensure we have a user to disable
@@ -209,6 +217,7 @@ class TestUserManagement:
         expect(row).to_contain_text("Disabled")
 
     def test_bulk_delete_users(self, authenticated_page: Page):
+        """Verify that multiple users can be selected and deleted simultaneously."""
         self.user_mgt_page.navigate_to_users()
         authenticated_page.wait_for_timeout(2000)
         
@@ -236,6 +245,7 @@ class TestUserManagement:
         assert not self.user_mgt_page.is_user_present(user2), f"User {user2} still exists after bulk deletion!"
 
     def test_search_user_by_username(self, authenticated_page: Page):
+        """Verify that users can be searched and found by their exact username."""
         self.user_mgt_page.navigate_to_users()
         authenticated_page.wait_for_timeout(2000)
         
@@ -270,6 +280,7 @@ class TestUserManagement:
         self.user_mgt_page.delete_user(test_username)
 
     def test_search_user_by_role(self, authenticated_page: Page):
+        """Verify that users can be filtered by their assigned 'User Role'."""
         self.user_mgt_page.navigate_to_users()
         authenticated_page.wait_for_timeout(2000)
         
@@ -298,6 +309,7 @@ class TestUserManagement:
         self.user_mgt_page.reset_search()
 
     def test_search_user_by_status(self, authenticated_page: Page):
+        """Verify that users can be filtered by their current 'Status' (Enabled/Disabled)."""
         self.user_mgt_page.navigate_to_users()
         authenticated_page.wait_for_timeout(2000)
         
@@ -319,6 +331,7 @@ class TestUserManagement:
             print("No users found with the specified status.")
 
     def test_search_non_existing_user(self, authenticated_page: Page):
+        """Verify that a 'No Records Found' message is displayed when searching for a non-existent username."""
         self.user_mgt_page.navigate_to_users()
         authenticated_page.wait_for_timeout(2000)
         
@@ -335,6 +348,7 @@ class TestUserManagement:
         self.user_mgt_page.reset_search()
 
     def test_delete_user(self, authenticated_page: Page):
+        """Verify that a user can be successfully deleted from the system."""
         authenticated_page.wait_for_timeout(2000)
         assert TestUserManagement.username_to_test is not None, "Setup failed: No user to delete!"
         

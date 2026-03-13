@@ -20,12 +20,12 @@ class UserManagementPage:
         self.delete_selected_button = "//button[normalize-space()='Delete Selected']"
 
         # Form Fields
-        self.user_role_dropdown = "//label[text()='User Role']/../following-sibling::div//div[contains(@class, 'oxd-select-text')]"
-        self.employee_name_autocomplete = "//label[text()='Employee Name']/../following-sibling::div//input"
-        self.status_dropdown = "//label[text()='Status']/../following-sibling::div//div[contains(@class, 'oxd-select-text')]"
-        self.username_input = "//label[text()='Username']/../following-sibling::div//input"
-        self.password_input = "//label[text()='Password']/../following-sibling::div//input"
-        self.confirm_password_input = "//label[text()='Confirm Password']/../following-sibling::div//input"
+        self.user_role_dropdown = "//label[contains(normalize-space(),'User Role')]/../following-sibling::div//div[contains(@class, 'oxd-select-text')]"
+        self.employee_name_autocomplete = "//label[contains(normalize-space(),'Employee Name')]/../following-sibling::div//input"
+        self.status_dropdown = "//label[contains(normalize-space(),'Status')]/../following-sibling::div//div[contains(@class, 'oxd-select-text')]"
+        self.username_input = "//label[contains(normalize-space(),'Username')]/../following-sibling::div//input"
+        self.password_input = "//label[contains(normalize-space(),'Password')]/../following-sibling::div//input"
+        self.confirm_password_input = "//label[contains(normalize-space(),'Confirm Password')]/../following-sibling::div//input"
  
         # Search / Filter
         self.search_username_input = "//label[text()='Username']/ancestor::div[contains(@class, 'oxd-input-group')]//input"
@@ -154,7 +154,7 @@ class UserManagementPage:
             return False
 
     def is_required_error_visible(self, field_name):
-        locator = f"//label[text()='{field_name}']/ancestor::div[contains(@class, 'oxd-input-group')]//span[contains(@class,'oxd-input-group__message') and text()='Required']"
+        locator = f"//label[contains(normalize-space(),'{field_name}')]/ancestor::div[contains(@class, 'oxd-input-group')]//span[contains(@class,'oxd-input-group__message') and text()='Required']"
         try:
             self.page.wait_for_selector(locator, timeout=3000)
             return True
