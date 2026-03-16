@@ -15,7 +15,7 @@ test_results_data = []
 def pytest_collection_modifyitems(config, items):
     """Enforce test execution priority: Login -> Job Actions -> Job Category"""
     # Priority order for test files
-    order = ["test_login.py", "test_employment_status.py", "test_job_actions.py", "test_job_categories.py", "test_user_management.py"]
+    order = ["test_login.py", "test_user_management.py", "test_job_actions.py", "test_employment_status.py", "test_job_categories.py", "test_work_shifts.py", "test_general_info.py", "test_locations.py" , "test_organization_structure.py"]
     
     def get_order_priority(item):
         filename = os.path.basename(item.fspath)
