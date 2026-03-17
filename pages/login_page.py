@@ -16,7 +16,6 @@ class LoginPage:
 
     def navigate(self, BASE_URL):
         self.page.goto(BASE_URL)
-
     def login(self, username, password):
         self.page.fill(self.username_input, username)
         self.page.fill(self.password_input, password)

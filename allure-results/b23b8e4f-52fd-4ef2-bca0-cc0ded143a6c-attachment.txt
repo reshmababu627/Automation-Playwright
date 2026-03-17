@@ -1,3 +1,0 @@
-Searching for users with role: Admin
-Found 0 users with role Admin
-No users found with the specified role, but search completed.

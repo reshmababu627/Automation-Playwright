@@ -35,7 +35,7 @@ class TestLocations:
         
         # Verify
         assert self.locations_page.is_location_present(TestLocations.location_name), f"Location {TestLocations.location_name} not found!"
-
+        
     def test_add_location_mandatory_name(self, authenticated_page: Page):
         """Verify that the 'Name' field is mandatory when adding a location."""
         authenticated_page.wait_for_timeout(2000)

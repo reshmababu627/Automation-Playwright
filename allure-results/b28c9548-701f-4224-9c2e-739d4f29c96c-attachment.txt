@@ -1,3 +1,0 @@
-Searching for users with status: Enabled
-Found 0 users with status Enabled
-No users found with the specified status.

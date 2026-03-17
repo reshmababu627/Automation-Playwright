@@ -1,2 +1,0 @@
-Searching for users with role: Admin
-Found 4 users with role Admin
