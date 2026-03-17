@@ -39,28 +39,40 @@ def browser(playwright_instance):
     browser.close()
 
 @pytest.fixture(scope="session")
-def authenticated_page(page):
-    """Use the shared session page and sign in once."""
-    if "dashboard/index" not in page.url:
-        login_page = LoginPage(page)
-        # Only navigate if not already on login page
-        if "/login" not in page.url:
-            login_page.navigate(BASE_URL)
-        
-        login_page.login(USERNAME, PASSWORD)
-        
-        # Wait for dashboard to load
-        page.wait_for_url("**/dashboard/index", timeout=60000)
-    
-    yield page
-
-@pytest.fixture(scope="session")
-def context(browser):
+def session_context(browser):
     context = browser.new_context()
     yield context
     context.close()
 
 @pytest.fixture(scope="session")
+def session_page(session_context):
+    page = session_context.new_page()
+    yield page
+    page.close()
+
+@pytest.fixture(scope="session")
+def authenticated_page(session_page):
+    """Use the shared session page and sign in once."""
+    if "dashboard/index" not in session_page.url:
+        login_page = LoginPage(session_page)
+        # Only navigate if not already on login page
+        if "/login" not in session_page.url:
+            login_page.navigate(BASE_URL)
+        
+        login_page.login(USERNAME, PASSWORD)
+        
+        # Wait for dashboard to load
+        session_page.wait_for_url("**/dashboard/index", timeout=60000)
+    
+    yield session_page
+
+@pytest.fixture(scope="function")
+def context(browser):
+    context = browser.new_context()
+    yield context
+    context.close()
+
+@pytest.fixture(scope="function")
 def page(context):
     page = context.new_page()
     yield page
