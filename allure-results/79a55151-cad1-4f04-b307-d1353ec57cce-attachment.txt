@@ -1,1 +1,0 @@
-Testing Bulk Delete for: ['BulkDelete_4266', 'BulkDelete_6787', 'BulkDelete_1068']
