@@ -5,6 +5,7 @@ from pages.login_page import LoginPage
 from pages.job_category_page import JobCategoryPage
 from utils.config import BASE_URL, USERNAME, PASSWORD
 
+
 class TestJobCategories:
     category_name = None
 

@@ -19,7 +19,9 @@ class LoginPage:
     def login(self, username, password):
         self.page.fill(self.username_input, username)
         self.page.fill(self.password_input, password)
-        self.page.click(self.login_button)
+        # Use no_wait_after=True to avoid timing out if navigation is slow/complex
+        # We handle waiting for the target URL in authenticated_page fixture
+        self.page.click(self.login_button, no_wait_after=True)
     
     def logout(self):
         self.page.click(self.user_dropdown)

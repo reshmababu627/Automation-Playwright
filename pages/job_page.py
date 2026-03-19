@@ -31,9 +31,9 @@ class JobPage:
 
     # ---------------- Navigation ----------------
     def navigate_to_job_titles(self):   
-        self.page.click(self.admin_menu)    
-        self.page.click(self.job_menu) 
-        self.page.click(self.job_titles_option) 
+        self.page.click(self.admin_menu, no_wait_after=True)    
+        self.page.click(self.job_menu, no_wait_after=True) 
+        self.page.click(self.job_titles_option, no_wait_after=True) 
         self.page.wait_for_url("**/viewJobTitleList")
         self.page.wait_for_selector(self.job_page_header)
 
@@ -131,11 +131,17 @@ class JobPage:
 
     def is_duplicate_error_visible(self):
         try:
-            # Wait for any error message to appear
-            self.page.wait_for_selector(self.error_message, timeout=5000)
+            # Wait for either field error span OR toast message
+            error_selector = f"{self.error_message} | //div[contains(@class,'oxd-toast-content')]"
+            self.page.wait_for_selector(error_selector, timeout=5000)
+            
+            # Check field errors
             errors = self.page.locator(self.error_message).all_text_contents()
-            for error in errors:
-                if "already exists" in error.lower():
+            # Check toasts
+            toasts = self.page.locator("//div[contains(@class,'oxd-toast-content')]").all_text_contents()
+            
+            for msg in errors + toasts:
+                if "already exists" in msg.lower():
                     return True
             return False
         except:

@@ -1,11 +1,13 @@
 import random
 import pytest
+import os
 from playwright.sync_api import Page
 
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
 from pages.job_page import JobPage
 from utils.config import BASE_URL, USERNAME, PASSWORD
+
 
 
 class TestJob:
@@ -61,7 +63,7 @@ class TestJob:
         assert not self.job_page.is_job_present(title_to_delete), f"Job Title {title_to_delete} still exists after deletion!"
 
     def test_add_job_title_duplicate(self, authenticated_page: Page):
-       #self.job_page.navigate_to_job_titles()
+        #self.job_page.navigate_to_job_titles()
         authenticated_page.wait_for_timeout(2000)
         existing_title = f"Duplicate Job {random.randint(1000, 9999)}"
         
@@ -132,7 +134,7 @@ class TestJob:
             assert not self.job_page.is_job_present(title), f"Job Title {title} still exists after bulk deletion!"
 
     def test_upload_job_specification(self, authenticated_page: Page):
-        import os
+        authenticated_page.wait_for_timeout(2000)
        # self.job_page.navigate_to_job_titles()
         authenticated_page.wait_for_timeout(2000)
         self.job_page.page.click(self.job_page.add_button)
@@ -155,7 +157,6 @@ class TestJob:
         #self.job_page.delete_job(job_title)
 
     def test_upload_invalid_file_format(self, authenticated_page: Page):
-        import os
         #self.job_page.navigate_to_job_titles()
         authenticated_page.wait_for_timeout(2000)
         self.job_page.page.click(self.job_page.add_button)

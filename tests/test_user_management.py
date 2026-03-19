@@ -4,6 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.login_page import LoginPage
 from pages.user_management_page import UserManagementPage
 
+
 class TestUserManagement:
     username_to_test = None
     employee_to_assign = "a" # We'll just type 'a' to get the first available employee
