@@ -76,9 +76,11 @@ class UserManagementPage:
     def edit_user(self, current_username, new_username=None, new_role=None, new_status=None):
         self.page.wait_for_selector("div.oxd-table-body")
         
-        # Find row by username text
-        row = self.page.locator("div.oxd-table-row").filter(has_text=current_username)
-        row.locator(self.edit_button).click()
+        # Find row where the second cell (username column) matches the username
+        row = self.page.locator("div.oxd-table-row").filter(
+            has=self.page.locator("div.oxd-table-cell").nth(1).filter(has_text=current_username)
+        )
+        row.locator(self.edit_button).first.click()
         
         # Wait for edit page
         self.page.wait_for_url(re.compile(r".*saveSystemUser.*"))
@@ -101,8 +103,10 @@ class UserManagementPage:
         self.page.wait_for_load_state("networkidle")
 
     def delete_user(self, username):
-        row_xpath = f"//div[contains(@class, 'oxd-table-row') and .//div[text()='{username}']]"
-        self.page.locator(row_xpath).locator("i.bi-trash").click()
+        row_locator = self.page.locator("div.oxd-table-row").filter(
+            has=self.page.locator("div.oxd-table-cell").nth(1).filter(has_text=username)
+        )
+        row_locator.locator("i.bi-trash").first.click()
         
         self.page.wait_for_timeout(2000)
         self.page.click(self.delete_confirm_button)
@@ -111,9 +115,11 @@ class UserManagementPage:
     def bulk_delete_users(self, usernames):
         # Select checkboxes for all given usernames
         for username in usernames:
-            row_xpath = f"//div[contains(@class, 'oxd-table-row') and .//div[text()='{username}']]"
+            row_locator = self.page.locator("div.oxd-table-row").filter(
+                has=self.page.locator("div.oxd-table-cell").nth(1).filter(has_text=username)
+            )
             # Using the established pattern from work_shifts_page.py
-            self.page.locator(row_xpath).locator(".oxd-checkbox-wrapper span").click()
+            row_locator.locator(".oxd-checkbox-wrapper span").first.click()
             self.page.wait_for_timeout(500)
             
         # Click Delete Selected
@@ -188,4 +194,5 @@ class UserManagementPage:
     def is_user_present(self, username):
         self.page.wait_for_selector("div.oxd-table-body")
         rows = self.page.locator("div.oxd-table-body div.oxd-table-row")
-        return rows.filter(has_text=username).count() > 0
+        target_cell = self.page.locator("div.oxd-table-cell").nth(1)
+        return rows.filter(has=target_cell.filter(has_text=username)).count() > 0
