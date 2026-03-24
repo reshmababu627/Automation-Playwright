@@ -5,6 +5,10 @@ pipeline {
         allure 'allure'
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     environment {
         PYTHON = "C:\\Users\\reshma.b\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
     }
@@ -13,15 +17,16 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/reshmababu627/Automation-Playwright.git'
+                cleanWs()
+                git branch: 'main', url: 'https://github.com/reshmababu627/Automation-Playwright.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 bat "\"%PYTHON%\" -m pip install -r requirements.txt"
-                bat "\"%PYTHON%\" -m playwright install"
                 bat "\"%PYTHON%\" -m pip install pytest-rerunfailures"
+                bat "\"%PYTHON%\" -m playwright install"
             }
         }
 
