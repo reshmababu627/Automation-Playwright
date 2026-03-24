@@ -1,2 +1,0 @@
-Searching for users with status: Enabled
-Found 20 users with status Enabled

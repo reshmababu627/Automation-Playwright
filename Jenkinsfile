@@ -6,7 +6,6 @@ pipeline {
     }
 
     environment {
-        EMAIL_RECIPIENT = 'reshmababu162@gmail.com'
         PYTHON = "C:\\Users\\reshma.b\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
     }
 
@@ -14,13 +13,15 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/reshmababu627/Automation-Playwright.git'
+                git 'https://github.com/reshmababu627/Automation-Playwright.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat "\"${PYTHON}\" -m pip install -r requirements.txt"
+                bat "\"%PYTHON%\" -m pip install -r requirements.txt"
+                bat "\"%PYTHON%\" -m playwright install"
+                bat "\"%PYTHON%\" -m pip install pytest-rerunfailures"
             }
         }
 
@@ -36,49 +37,49 @@ pipeline {
 
                 stage('Login Test') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_login.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_login.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/login"
                     }
                 }
 
                 stage('Employment Test') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_employment_status.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_employment_status.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/employment"
                     }
                 }
 
                 stage('General Info') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_general_info.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_general_info.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/general"
                     }
                 }
 
                 stage('Job Actions') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_job_actions.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_job_actions.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/job"
                     }
                 }
 
                 stage('Job Categories') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_job_categories.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_job_categories.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/jobcat"
                     }
                 }
 
                 stage('Locations') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_locations.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_locations.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/location"
                     }
                 }
 
                 stage('User Management') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_user_management.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_user_management.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/user"
                     }
                 }
 
                 stage('Workshift') {
                     steps {
-                        bat "\"${PYTHON}\" -m pytest tests/test_work_shifts.py --alluredir=allure-results"
+                        bat "\"%PYTHON%\" -m pytest tests/test_work_shifts.py --reruns 2 --reruns-delay 2 --alluredir=allure-results/workshift"
                     }
                 }
             }
@@ -86,26 +87,28 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'allure-results']]
+                ])
             }
         }
     }
 
     post {
-
-        success {
+        always {
             emailext (
-                subject: "SUCCESS: Build #${BUILD_NUMBER}",
-                body: "Build Passed. Check Allure Report in Jenkins.",
-                to: "${EMAIL_RECIPIENT}"
-            )
-        }
-
-        failure {
-            emailext (
-                subject: "FAILURE: Build #${BUILD_NUMBER}",
-                body: "Build Failed. Check console logs.",
-                to: "${EMAIL_RECIPIENT}"
+                subject: "Build: ${env.JOB_NAME} - #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """
+                Build Status: ${currentBuild.currentResult}
+                
+                Job Name: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+                
+                Check Report: ${env.BUILD_URL}
+                """,
+                to: "reshmababu162@gmail.com"
             )
         }
     }
