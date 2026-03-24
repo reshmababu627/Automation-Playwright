@@ -36,7 +36,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    bat "%PYTHON% -m pytest tests/ -n auto --dist loadfile --reruns 2 --reruns-delay 2 --alluredir=allure-results"
+                    bat "%PYTHON% -m pytest tests/"
                 }
             }
         }
@@ -50,7 +50,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'allure-results/**', fingerprint: true
+            archiveArtifacts artifacts: 'allure-results/**, reports/**', fingerprint: true
         }
     }
 }
