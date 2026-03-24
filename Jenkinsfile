@@ -103,9 +103,6 @@ pipeline {
         }
 
         stage('Generate Allure Report') {
-            when {
-                always()
-            }
             steps {
                 allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
             }
