@@ -2,6 +2,8 @@ pipeline {
     agent any
 
     environment {
+        // Define the absolute path to Python on the build agent to avoid PATH issues
+        PYTHON = 'C:\\Users\\reshma.b\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
         PYTHONPATH = "${WORKSPACE}"
     }
 
@@ -19,8 +21,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
-                bat 'playwright install chromium'
+                // Use the absolute path to Python to invoke pip
+                bat '"%PYTHON%" -m pip install -r requirements.txt'
+                bat '"%PYTHON%" -m playwright install chromium'
             }
         }
 
@@ -29,8 +32,8 @@ pipeline {
                 script {
                     // Use catchError to ensure the pipeline continues even if tests fail
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        // -n 4 runs tests in parallel using 4 workers
-                        bat 'pytest -n auto tests/ --alluredir=allure-results'
+                        // -n 4 runs tests in parallel using 4 workers for stability on the demo server
+                        bat '"%PYTHON%" -m pytest -n 4 tests/ --alluredir=allure-results'
                     }
                 }
             }
@@ -52,4 +55,5 @@ pipeline {
         }
     }
 }
+
 
