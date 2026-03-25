@@ -33,7 +33,7 @@ pipeline {
                     // Use catchError to ensure the pipeline continues even if tests fail
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         // -n 4 runs tests in parallel using 4 workers for stability on the demo server
-                        bat '"%PYTHON%" -m pytest -n 4 tests/ --alluredir=allure-results'
+                        bat '"%PYTHON%" -m pytest -n auto tests/ --alluredir=allure-results'
                     }
                 }
             }
