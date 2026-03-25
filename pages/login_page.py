@@ -38,5 +38,9 @@ class LoginPage:
         return self.page.inner_text(self.input_error_msg)
     
     def is_input_error_displayed(self):
-         return self.page.is_visible(self.input_error_msg) 
+        try:
+            self.page.wait_for_selector(self.input_error_msg, state="visible", timeout=5000)
+            return True
+        except:
+            return False 
       

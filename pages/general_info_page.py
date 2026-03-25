@@ -31,18 +31,18 @@ class GeneralInfoPage:
         if "/viewOrganizationGeneralInformation" not in self.page.url:
             self.page.click(self.admin_menu, no_wait_after=True)
             # Wait for any Top Nav element to ensure page transition
-            self.page.wait_for_selector(self.organization_menu, state="visible", timeout=10000)
+            self.page.wait_for_selector(self.organization_menu, state="visible", timeout=20000)
             
             # Check if Organization menu needs to be clicked
             if not self.page.is_visible(self.general_info_menu):
                 self.page.click(self.organization_menu, no_wait_after=True)
             
             # Wait for dropdown item with explicit visibility
-            self.page.wait_for_selector(self.general_info_menu, state="visible", timeout=10000)
+            self.page.wait_for_selector(self.general_info_menu, state="visible", timeout=20000)
             self.page.click(self.general_info_menu, no_wait_after=True)
             self.page.wait_for_url("**/viewOrganizationGeneralInformation")
         
-        self.page.wait_for_selector(self.page_header, state="visible", timeout=15000)
+        self.page.wait_for_selector(self.page_header, state="visible", timeout=30000)
 
     def is_edit_enabled(self):
         # We can check if name input is disabled

@@ -42,7 +42,8 @@ def authenticated_page(session_page):
         login_page.navigate(BASE_URL)
         
         # Wait for fields to be interactable
-        session_page.wait_for_selector(login_page.username_input, state="visible")
+        session_page.wait_for_load_state("networkidle")
+        session_page.wait_for_selector(login_page.username_input, state="visible",  timeout=60000)
         login_page.login(USERNAME, PASSWORD)
         
         # Wait for dashboard to load

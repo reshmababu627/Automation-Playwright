@@ -2,30 +2,14 @@ pipeline {
     agent any
 
     environment {
-        PYTHON = "C:\\Users\\reshma.b\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        PYTHONPATH = "${WORKSPACE}"
     }
 
     stages {
-
-        stage('Checkout') {
+        stage('Checkout & Clean') {
             steps {
-                cleanWs()
                 checkout scm
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                bat """
-                %PYTHON% -m pip install -r requirements.txt
-                %PYTHON% -m pip install pytest-rerunfailures
-                %PYTHON% -m playwright install
-                """
-            }
-        }
-
-        stage('Clean Results') {
-            steps {
+                // Clear old allure-results to avoid stale reporting
                 bat '''
                 if exist allure-results rmdir /s /q allure-results
                 mkdir allure-results
@@ -33,16 +17,28 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Install Dependencies') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    bat "%PYTHON% -m pytest tests/"
+                bat 'pip install -r requirements.txt'
+                bat 'playwright install chromium'
+            }
+        }
+
+        stage('Run Tests (Parallel)') {
+            steps {
+                script {
+                    // Use catchError to ensure the pipeline continues even if tests fail
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        // -n 4 runs tests in parallel using 4 workers
+                        bat 'pytest -n auto tests/ --alluredir=allure-results'
+                    }
                 }
             }
         }
 
         stage('Generate Allure Report') {
             steps {
+                // Generates the Allure HTML report from the results
                 allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
             }
         }
@@ -50,7 +46,10 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'allure-results/**, reports/**', fingerprint: true
+            // Archive results for manual inspection if needed
+            archiveArtifacts artifacts: 'allure-results/*', followSymlinks: false
+            cleanWs()
         }
     }
 }
+
