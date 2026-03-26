@@ -1,3 +1,0 @@
-Creating user for search test: TestUser_16791
-Searching for user: TestUser_16791
-Rows found after search: 2
